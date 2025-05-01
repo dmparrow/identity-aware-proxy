@@ -58,7 +58,6 @@ func Authorize(session *Session, route *Route) bool {
         }
     }
 
-    log.Printf("Access denied: user roles=%v, groups=%v", session.Roles, session.Groups)
     return false
 }
 

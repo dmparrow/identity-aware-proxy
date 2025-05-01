@@ -5,27 +5,11 @@ import (
     "log"
     "net/http"
     "strings"
-    "os"
-    "os/exec"
     "iap/auth"
     "iap/proxy"
 )
-func listDir(path string) {
-    log.Printf("Listing directory: %s", path)
-    out, err := exec.Command("ls", "-l", path).CombinedOutput()
-    if err != nil {
-        log.Printf("Error listing %s: %v", path, err)
-    } else {
-        log.Print(string(out))
-    }
-}
 
 func main() {
-    cwd, _ := os.Getwd()
-    log.Printf("Working dir: %s", cwd)
-
-    listDir("/app")
-    listDir("/app/conf")
     config, err := auth.LoadConfig("/app/conf/config.json")
     if err != nil {
         log.Fatalf("Error loading config: %v", err)

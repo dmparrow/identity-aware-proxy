@@ -35,7 +35,6 @@ func Middleware(route *Route, next http.Handler) http.Handler {
             return
         }
 
-        log.Printf("[%s] Access granted for %s (roles: [%s]) to %s", now, session.Email, userRoles, r.URL.Path)
         next.ServeHTTP(w, r)
     })
 }

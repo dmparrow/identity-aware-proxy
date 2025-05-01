@@ -50,7 +50,6 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
         oauth2.SetAuthURLParam("code_challenge_method", "S256"),
     )
 
-    log.Printf("Redirecting to: %s", authURL)
     http.Redirect(w, r, authURL, http.StatusFound)
 }
 

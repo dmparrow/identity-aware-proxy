@@ -27,7 +27,6 @@ func SetupOAuthClients(cfg *Config) error {
     ctx := context.Background()
     for _, route := range cfg.Routes {
         rule := strings.ToLower(route.Rule)
-        log.Printf("Registering route: %s", rule)
         issuerURL := fmt.Sprintf("%s/realms/%s", route.OAuth2.Provider.Issuer, route.OAuth2.Provider.Realm)
         provider, err := oidc.NewProvider(ctx, issuerURL)
         if err != nil {
@@ -41,12 +40,10 @@ func SetupOAuthClients(cfg *Config) error {
             Endpoint:     provider.Endpoint(),
             Scopes:       append([]string{oidc.ScopeOpenID}, route.OAuth2.Provider.Scopes...),
         }
-        log.Printf("RedirectURL for route %s: %s", rule, oauthCfg.RedirectURL)
         clients[rule] = &clientCtx{
             Config:   oauthCfg,
             Verifier: provider.Verifier(&oidc.Config{ClientID: route.OAuth2.Provider.ClientID}),
         }
-
         routes[rule] = route
     }
     return nil
