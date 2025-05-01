@@ -1,0 +1,18 @@
+
+# syntax=docker/dockerfile:1.4
+
+# Build stage
+FROM golang:1.23-alpine AS builder
+
+WORKDIR /app
+COPY token_echo.go .
+
+# Build statically
+RUN go build -o token-echo token_echo.go
+
+# Final image
+FROM alpine:latest
+COPY --from=builder /app/token-echo /usr/local/bin/token-echo
+
+EXPOSE 8080
+ENTRYPOINT ["token-echo"]

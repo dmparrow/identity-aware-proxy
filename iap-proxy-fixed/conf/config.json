@@ -1,0 +1,29 @@
+
+{
+  "routes": [
+    {
+      "rule": "goapp.localhost",
+      "service": "go-app",
+      "allowedRoles": ["admin", "iap-user"],
+      "allowedGroups": ["engineering", "qa"],
+      "OAuth2": {
+        "provider": {
+          "name": "oidc",
+          "issuer": "http://keycloak:8080",
+          "publicRedirectHost": "http://goapp.localhost",
+          "realm": "dev",
+          "clientId": "iap",
+          "clientSecret": "4eq0Vt7jmO6mQEOLmRnTCKfjpPSRm0AI",
+          "scopes": ["openid", "profile", "email"]
+        },
+        "authResponseHeaders": ["X-Forwarded-User", "X-Forwarded-Email"]
+      },
+      "Upstream": {
+        "passHostHeader": true,
+        "servers": [
+          { "url": "http://token-echo:8080" }
+        ]
+      }
+    }
+  ]
+}

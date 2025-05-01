@@ -1,0 +1,36 @@
+
+version: '3.8'
+
+services:
+  token-echo:
+    build:
+      context: ./token-echo
+      dockerfile: Dockerfile.token-echo
+    container_name: token-echo
+
+    networks:
+      - cicd_local-net
+  iap:
+    build:
+      context: ./iap-proxy-fixed
+      dockerfile: Dockerfile
+    container_name: iap-proxy
+    environment:
+      - IAP_ENV=dev
+    volumes:
+      - ./iap-proxy-fixed/conf/config.json:/app/conf/config.json
+    ports:
+      - "80:8080"
+    networks:
+      - cicd_local-net
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.go-app.rule=Host(`goapp.localhost`)"
+      - "traefik.http.routers.go-app.entrypoints=websecure"
+      - "traefik.http.routers.go-app.tls.certresolver=letsencrypt"
+      - "traefik.http.services.go-app.loadbalancer.server.port=8080"
+
+networks:
+  cicd_local-net:
+    external: true
